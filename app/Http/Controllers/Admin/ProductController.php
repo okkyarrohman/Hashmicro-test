@@ -3,26 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $products = DB::table('products')
-            ->join('users', 'products.merchant_id', '=', 'users.id')
-            ->select(
-                'products.*',
-                'users.name as merchantName'
-            )
-            ->get();
+    protected $productService;
 
-        return view('admin.product.index', compact('products'));
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+    public function index(Request $request)
+    {
+        $product = $this->productService->index($request);
+
+        return view('admin.product.index', [
+            'products' => $product['data']
+        ]);
     }
 
     /**
@@ -38,41 +39,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|integer',
-            'stock' => 'required|integer',
-        ]);
-
-        $storedData = [
-            'merchant_id' => Auth::id(),
-            'name' => $request->input('name'),
-            'price' => $request->input('price'),
-            'stock' => $request->input('stock')
-        ];
-
-        DB::table('products')->insert($storedData);
+        $this->productService->store($request);
 
         return redirect()->route('products.index')->with('success', 'Product Created');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $product = DB::table('products')->where('id', $id)->first();
+        $product = $this->productService->show($id);
 
 
-        return view('admin.product.edit', compact('product'));
+        return view('admin.product.edit', [
+            'product' => $product['data']
+        ]);
     }
 
     /**
@@ -80,25 +63,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-        ]);
-
-        $productQuery = DB::table('products')
-            ->where('id', $id);
-
-        $product = $productQuery->first();
-
-        $updatedData = [
-            'merchant_id' => Auth::id(),
-            'name' => $request->input('name', $product->name),
-            'price' => $request->input('price', $product->price),
-            'stock' => $request->input('stock', $product->stock)
-        ];
-
-        $productQuery->update($updatedData);
+        $this->productService->update($request, $id);
 
         return redirect()->route('products.index')->with('success', 'Product updated');
     }
@@ -108,8 +73,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = DB::table('products')->where('id', $id);
-        $product->delete();
+        $this->productService->destroy($id);
         return redirect()->route('products.index')->with('success', 'Product Deleted');
     }
 }

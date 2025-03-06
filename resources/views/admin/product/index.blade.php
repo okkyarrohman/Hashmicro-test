@@ -22,13 +22,13 @@
             <tbody>
                 @foreach($products as $product)
                     <tr>
-                        <td>{{ $product->merchantName }}</td>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ "Rp. ". number_format($product->price) }}</td>
-                        <td>{{ $product->stock }}</td>
+                        <td>{{ $product['merchantName'] }}</td>
+                        <td>{{ $product['name'] }}</td>
+                        <td>{{ "Rp. ". number_format($product['price']) }}</td>
+                        <td>{{ $product['stock'] }}</td>
                         <td>
-                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('products.edit', $product['product_id']) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('products.destroy', $product['product_id']) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm"
