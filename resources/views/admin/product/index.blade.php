@@ -12,6 +12,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>Merchant Name</th>
                     <th>Name</th>
                     <th>Price</th>
                     <th>Stock</th>
@@ -21,8 +22,9 @@
             <tbody>
                 @foreach($products as $product)
                     <tr>
+                        <td>{{ $product->merchantName }}</td>
                         <td>{{ $product->name }}</td>
-                        <td>${{ $product->price }}</td>
+                        <td>{{ "Rp. ". number_format($product->price) }}</td>
                         <td>{{ $product->stock }}</td>
                         <td>
                             <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>

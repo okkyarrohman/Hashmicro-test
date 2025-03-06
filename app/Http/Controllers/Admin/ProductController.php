@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -13,7 +14,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = DB::table('products')->get();
+        $products = DB::table('products')
+            ->join('users', 'products.merchant_id', '=', 'users.id')
+            ->select(
+                'products.*',
+                'users.name as merchantName'
+            )
+            ->get();
 
         return view('admin.product.index', compact('products'));
     }
@@ -38,6 +45,7 @@ class ProductController extends Controller
         ]);
 
         $storedData = [
+            'merchant_id' => Auth::id(),
             'name' => $request->input('name'),
             'price' => $request->input('price'),
             'stock' => $request->input('stock')
@@ -84,6 +92,7 @@ class ProductController extends Controller
         $product = $productQuery->first();
 
         $updatedData = [
+            'merchant_id' => Auth::id(),
             'name' => $request->input('name', $product->name),
             'price' => $request->input('price', $product->price),
             'stock' => $request->input('stock', $product->stock)
