@@ -20,6 +20,21 @@ class ProductRepository
             );
     }
 
+    public function updateStock($id, $newStock)
+    {
+        DB::table('products')->where('id', $id)->update([
+            'stock' => $newStock
+        ]);
+    }
+
+
+    public function getWhereInId(array $ids)
+    {
+        return DB::table('products')
+            ->whereIn('id', $ids)
+            ->get();
+    }
+
     public function getByIdWithRelation($id)
     {
         return DB::table('products')

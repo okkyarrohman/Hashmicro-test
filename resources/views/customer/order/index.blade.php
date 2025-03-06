@@ -1,12 +1,22 @@
 @extends('layouts.customer')
 
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Dashboard Customer') }}</div>
 
+                    <div class="card-header">{{ __('Dashboard Customer') }}</div>
                     <div class="card-body">
                         <form action="{{ route('order.store') }}" method="POST">
                             @csrf
@@ -17,6 +27,7 @@
                                         <th>Nama Produk</th>
                                         <th>Harga</th>
                                         <th>Jumlah</th>
+                                        <th>Stock</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -26,15 +37,18 @@
                                                 <input type="checkbox" name="product_ids[]" value="{{ $product->id }}">
                                             </td>
                                             <td>{{ $product->name }}</td>
+
                                             <td>${{ $product->price }}</td>
                                             <td>
                                                 <input type="number" name="quantities[{{ $product->id }}]" value="1" min="1" class="form-control">
                                             </td>
+                                            <td>{{ $product->stock }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                             <button type="submit" class="btn btn-success">Checkout</button>
+
                         </form>
 
                     </div>

@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\OrderService;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
+    protected $orderService;
+
+
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
+    }
+
+
+
     public function index()
     {
         $products = Product::all();
@@ -22,52 +34,15 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'product_ids' => 'required|array',
-            'product_ids.*' => 'exists:products,id',
-            'quantities' => 'required|array',
-            'quantities.*' => 'integer|min:1',
-        ]);
+        $order = $this->orderService->store($request);
 
-        $products = DB::table('products')
-            ->whereIn('id', $request->input('product_ids'))
-            ->get();
-
-        $totalPrice = 0;
-        foreach ($products as $product) {
-            $quantity = $request->quantities[$product->id];
-            $totalPrice += $product->price * $quantity;
+        if (!empty($order['error'])) {
+            return redirect()->back()->withErrors($order['error'])->withInput();
         }
 
-        $storedOrder = [
-            'customer_id' => Auth::id(),
-            'typePayment_id' => 1,
-            'coupon_id' => 1,
-            'discount' => 0,
-            'tax' => 0,
-            'price' => $totalPrice,
-            'total_price' => $totalPrice,
-            'status' => 'UNPAID',
-            'created_at' => Carbon::now()
-        ];
-
-        $orderId = DB::table('orders')->insertGetId($storedOrder);
-
-        foreach ($products as $product) {
-
-            $storedDetail = [
-                'order_id' => $orderId,
-                'product_id' => $product->id,
-                'quantity' => $request->quantities[$product->id],
-                'price' => $product->price,
-                'created_at' => Carbon::now()
-            ];
-
-            DB::table('detail_orders')->insert($storedDetail);
-        }
-
-        return redirect()->route('order.show', $orderId);
+        return redirect()->route('order.show', $order['orderId'])->with('success', 'Pesanan berhasil dibuat!');
     }
+
 
 
     public function show($id)

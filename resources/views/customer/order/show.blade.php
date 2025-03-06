@@ -1,6 +1,10 @@
 @extends('layouts.customer')
 
 @section('content')
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <div class="container">
         <h2>Detail Order #{{ $order->id }}</h2>
         <p><strong>Status:</strong> {{ $order->status }}</p>
