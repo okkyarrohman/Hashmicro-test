@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Landing Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tambahkan Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -77,13 +80,24 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero bg-primary text-white text-center py-5">
-        <div class="container">
-            <h1>Submission Technical Test for HashMicro</h1>
-            <p class="lead">Okky Anugerah Arrohman</p>
-            <p class="lead">Laravel Developer</p>
-        </div>
-    </header>
+
+<!-- Hero Section -->
+<header class="hero bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1>Submission Technical Test for HashMicro</h1>
+        <p class="lead">Okky Anugerah Arrohman</p>
+        <p class="lead">Laravel Developer</p>
+        <p>
+            <a href="https://github.com/okkyarrohman" class="text-white me-3" target="_blank">
+                <i class="fab fa-github fa-lg"></i> GitHub
+            </a> |
+            <a href="https://www.linkedin.com/in/okky-arrohman-06b5a8256/" class="text-white ms-3" target="_blank">
+                <i class="fab fa-linkedin fa-lg"></i> LinkedIn
+            </a>
+        </p>
+    </div>
+</header>
+
 
     <!-- About Section -->
     <section id="about" class="py-5">
@@ -115,7 +129,7 @@
         <div class="container text-center">
             <h2 class="mb-4">Our Features</h2>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card p-3">
                         <h4>Products</h4>
                         <ul class="list-unstyled">
@@ -125,12 +139,22 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="card p-3">
                         <h4>Order Products</h4>
                         <ul class="list-unstyled">
                             <li>✔ Integration with payment gateway</li>
                             <li>✔ Order multiple products</li>
+                            <li>✔ Invoice</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h4>Transaction</h4>
+                        <ul class="list-unstyled">
+                            <li>✔ Show transaction</li>
+                            <li>✔ Detail</li>
                             <li>✔ Invoice</li>
                         </ul>
                     </div>
