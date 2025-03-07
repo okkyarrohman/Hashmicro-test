@@ -33,7 +33,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 });
 
 // Route group untuk Customer
-Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function () {
+Route::middleware(['auth'])->prefix('customer')->group(function () {
     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('order.store');
