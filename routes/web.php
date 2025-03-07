@@ -39,3 +39,4 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
 });
 
 Route::get('/customer/orders/{id}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/customer/orders/{id}/exportPdf', [OrderController::class, 'exportPdf'])->name('order.exportPdf');

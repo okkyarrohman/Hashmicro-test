@@ -137,4 +137,17 @@ class OrderService
             'success'    => true
         ];
     }
+
+
+    public function show($orderId)
+    {
+        $order = $this->orderRepository->getById($orderId);
+
+        $orderDetails = $this->detailOrderRepository->getByOrderId($orderId);
+
+        return [
+            'order' => $order,
+            'orderDetails' => $orderDetails
+        ];
+    }
 }

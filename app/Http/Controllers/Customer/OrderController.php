@@ -52,24 +52,17 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        // Ambil data order beserta detail order dan produk yang dibeli
 
-        $order = DB::table('orders')
-            ->where('orders.id', $id)
-            ->select('orders.*')
-            ->first(); // Gunakan first() agar hasilnya objek, bukan array
 
-        if (!$order) {
-            return abort(404, "Order tidak ditemukan.");
-        }
+        $order = $this->orderService->show($id);
 
-        // Ambil detail order
-        $orderDetails = DB::table('detail_orders')
-            ->join('products', 'detail_orders.product_id', '=', 'products.id')
-            ->where('detail_orders.order_id', $id)
-            ->select('detail_orders.*', 'products.name as product_name')
-            ->get();
 
-        return view('customer.order.show', compact('order', 'orderDetails'));
+
+        return view('customer.order.show', [
+            'order' => $order['order'],
+            'orderDetails' => $order['orderDetails']
+        ]);
     }
+
+    public function exportPdf($orderId) {}
 }

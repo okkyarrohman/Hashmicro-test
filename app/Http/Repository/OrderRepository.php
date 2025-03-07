@@ -46,4 +46,15 @@ class OrderRepository
                 'expired_at' => $expiredAt
             ]);
     }
+
+
+    public function getById($orderId)
+    {
+
+        return DB::table('orders')
+            ->where('orders.id', $orderId)
+            ->select('orders.*')
+            ->first(); // Gunakan first() agar hasilnya objek, bukan array
+
+    }
 }
