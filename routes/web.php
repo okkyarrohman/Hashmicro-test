@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\TransactionController as CustomerTransactionController;
@@ -23,7 +24,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/products/exportPdf', [ProductController::class, 'exportPdf'])->name('products.exportPdf');
 
 
-
+    Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction-admin.index');
 
     Route::resource('products', ProductController::class);
 });
@@ -32,8 +33,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function () {
     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
-    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::post('/orders', [OrderController::class, 'store'])->name('order.store');
 
     Route::get('/transaction', [CustomerTransactionController::class, 'index'])->name('transaction.index');
 });
+
+Route::get('/customer/orders/{id}', [OrderController::class, 'show'])->name('order.show');

@@ -7,22 +7,24 @@ use Illuminate\Support\Facades\DB;
 class OrderRepository
 {
 
-    public function getAllOrderByCustomer($customerId)
+    public function getAllOrder($customer)
     {
         return DB::table('detail_orders')
             ->join('orders', 'detail_orders.order_id', '=', 'orders.id')
             ->join('products', 'detail_orders.product_id', '=', 'products.id')
             ->join('users', 'orders.customer_id', '=', 'users.id')
-
             ->select(
                 'orders.*',
                 'products.name as productName',
                 'users.name as customerName',
                 'users.email as customerEmail'
             )
-            ->where('orders.customer_id', $customerId)
+            ->when($customer, function ($query, $customer) {
+                return $query->where('orders.customer_id', $customer);
+            })
             ->paginate(10);
     }
+
 
     public function storeGetId(array $data)
     {

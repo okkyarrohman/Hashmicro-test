@@ -39,8 +39,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('admin/transactions') ? 'active' : '' }}" href="/admin/transactions">
-                                <i class="bi bi-receipt"></i> Transactions
+                            <a class="nav-link {{ request()->is('admin/transaction') ? 'active' : '' }}" href="/admin/transaction">
+                                <i class="bi bi-receipt"></i> Transaction
                             </a>
                         </li>
                     </ul>
