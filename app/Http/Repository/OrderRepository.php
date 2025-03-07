@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class OrderRepository
 {
 
-    public function getAllOrder($customer)
+    public function getAllOrder($customerId)
     {
         return DB::table('detail_orders')
             ->join('orders', 'detail_orders.order_id', '=', 'orders.id')
@@ -19,8 +19,8 @@ class OrderRepository
                 'users.name as customerName',
                 'users.email as customerEmail'
             )
-            ->when($customer, function ($query, $customer) {
-                return $query->where('orders.customer_id', $customer);
+            ->when($customerId, function ($query, $customerId) {
+                return $query->where('orders.customer_id', $customerId);
             })
             ->paginate(10);
     }

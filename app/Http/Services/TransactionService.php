@@ -18,10 +18,10 @@ class TransactionService
     public function index($request)
     {
         $user = Auth::user();
-        $customer = $user->hasRole('customer');
+        $customerId = $user->hasRole('customer') ? $user->id : null;
 
 
-        $transactions = $this->orderRepository->getAllOrder($customer);
+        $transactions = $this->orderRepository->getAllOrder($customerId);
 
         $formattedData = [];
 
