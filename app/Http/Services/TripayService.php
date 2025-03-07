@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class TripayService
 
@@ -23,25 +24,24 @@ class TripayService
 
     public function createTransaction($orderId, $paymentCode, $totalPrice, $customer, $orderItems)
     {
-        $data = $this->merchantCode . $paymentCode . $orderId;
-        dd($data);
-
-        $signature = hash_hmac('sha256', $data, '9IsL8-wLR74-Go3s5-E94pc-iAQts');
-
+        $merchantRef = Str::random(6);
 
         $payload = [
-            'method'         => $paymentCode,
-            'merchant_ref'   => $orderId,
-            'amount'         => $totalPrice,
+            'method'         => $paymentCode, // Contoh: BCAVA, BRIVA, dll.
+            'merchant_ref'   => $orderId,     // Ini harus sesuai dengan yang di-sign
+            'amount'         => $totalPrice,  // Tidak perlu masuk dalam signature
             'customer_name'  => $customer->name,
             'customer_email' => $customer->email,
             'customer_phone' => $customer->phone ?? '-',
             'order_items'    => $orderItems,
             'callback_url'   => url('/api/tripay/callback'),
-            'return_url'     => url('/order/success'),
-            'expired_time'   => time() + (24 * 60 * 60), // Expired dalam 24 jam
-            'signature'      => $signature,
+            'return_url'     => url("/customer/orders/$orderId"),
+            'expired_time'   => time() + (24 * 60 * 60), // 24 jam
+            'signature'    => hash_hmac('sha256', $this->merchantCode . $orderId . $totalPrice, $this->privateKey)
         ];
+
+        // 🔹 Debug sebelum request (opsional)
+        // dd($data, $signature, $payload);
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}"
