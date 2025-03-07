@@ -17,7 +17,7 @@ class ProductService
 
     public function index($request)
     {
-        $products = $this->productRepository->getAllWithRelation()->paginate(10);
+        $products = $this->productRepository->getAllWithRelation($request)->paginate(10);
 
         $formattedData = [];
 

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductRepository
 {
-    public function getAllWithRelation()
+    public function getAllWithRelation($request)
     {
         return DB::table('products')
             ->join('users', 'products.merchant_id', '=', 'users.id')
@@ -15,10 +15,16 @@ class ProductRepository
                 'products.*',
                 'users.id as user_id',
                 'users.name as merchantName',
-                'users.email',
-
-            );
+                'users.email'
+            )
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('products.name', 'LIKE', "%{$search}%")
+                        ->orWhere('users.name', 'LIKE', "%{$search}%");
+                });
+            });
     }
+
 
     public function updateStock($id, $newStock)
     {

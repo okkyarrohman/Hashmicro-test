@@ -7,6 +7,8 @@ use App\Http\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class ProductController extends Controller
 {
@@ -26,9 +28,18 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function exportPdf(Request $request)
+    {
+        // dd(1);
+        $products = $this->productService->index($request);
+
+        $pdf = Pdf::loadView('admin.product.pdf', [
+            'products' => $products['data'],
+        ]);
+
+        return $pdf->download('product-list.pdf');
+    }
+
     public function create()
     {
         return view('admin.product.create');

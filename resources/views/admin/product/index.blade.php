@@ -9,6 +9,21 @@
             </a>
         </div>
 
+        <a href="{{ route('products.exportPdf') }}" class="btn btn-danger">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+        </a>
+
+        <form method="GET" action="{{ route('products.index') }}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search by Product or Merchant Name..."
+                    value="{{ request('search') }}">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+        </form>
+
+
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
