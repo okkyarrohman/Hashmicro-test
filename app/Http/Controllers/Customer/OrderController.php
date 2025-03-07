@@ -8,9 +8,8 @@ use App\Models\Product;
 use App\Models\TypePayment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -64,5 +63,15 @@ class OrderController extends Controller
         ]);
     }
 
-    public function exportPdf($orderId) {}
+    public function exportPdf($orderId)
+    {
+        $order = $this->orderService->show($orderId);
+
+        $pdf = Pdf::loadView('customer.order.pdf', [
+            'order' => $order['order'],
+            'orderDetails' => $order['orderDetails']
+        ]);
+
+        return $pdf->download('product-list.pdf');
+    }
 }
