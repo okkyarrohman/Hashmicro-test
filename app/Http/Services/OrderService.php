@@ -30,13 +30,14 @@ class OrderService
 
     public function store($request)
     {
-
+        $customer = Auth::user();
         try {
             $request->validate([
                 'product_ids' => 'required|array',
                 'product_ids.*' => 'exists:products,id',
                 'quantities' => 'required|array',
                 'quantities.*' => 'integer|min:1',
+                'typePayment_id' => 'required',
             ]);
 
             $products = $this->productRepository->getWhereInId($request->input('product_ids'));
@@ -72,10 +73,14 @@ class OrderService
                 ];
             }
 
+            $paymentCode = DB::table('type_payments')
+                ->where('id', $request->typePayment_id)
+                ->value('code');
+
 
             $storedOrder = [
                 'customer_id' => Auth::id(),
-                'typePayment_id' => 1,
+                'typePayment_id' => $request->input('typePayment_id'),
                 'coupon_id' => 1,
                 'discount' => 0,
                 'tax' => 0,
@@ -87,6 +92,7 @@ class OrderService
 
             $orderId = $this->orderRepository->storeGetId($storedOrder);
 
+            $orderItems = [];
             foreach ($products as $product) {
 
                 $storedDetail = [
@@ -97,8 +103,21 @@ class OrderService
                     'created_at' => Carbon::now()
                 ];
 
+                $orderItems[] = [
+                    'sku'       => (string) $product->id,
+                    'name'      => $product->name,
+                    'price'     => $product->price,
+                    'quantity'  => $quantity,
+                ];
+
                 $this->detailOrderRepository->store($storedDetail);
                 $this->productRepository->updateStock($product->id, $product->stock - $quantity);
+            }
+
+            $tripayService = new TripayService();
+            $tripayData = $tripayService->createTransaction($orderId, $paymentCode, $totalPrice, $customer, $orderItems);
+            if (!isset($tripayData['success']) || !$tripayData['success']) {
+                return ['error' => $tripayData['message'] ?? 'Gagal membuat transaksi di Tripay'];
             }
         } catch (\Exception $e) {
             return [
@@ -107,8 +126,9 @@ class OrderService
         }
 
         return [
-            'orderId' => $orderId,
-            'success' => true
+            'orderId'    => $orderId,
+            'tripay_url' => $tripayData['data']['checkout_url'],
+            'success'    => true
         ];
     }
 }

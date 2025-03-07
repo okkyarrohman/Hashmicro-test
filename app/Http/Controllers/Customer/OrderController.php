@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Services\OrderService;
 use App\Models\Product;
+use App\Models\TypePayment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,10 +26,14 @@ class OrderController extends Controller
 
     public function index()
     {
+
+        $typePayments = TypePayment::all();
+
+
         $products = Product::all();
 
 
-        return view('customer.order.index', compact('products'));
+        return view('customer.order.index', compact('products', 'typePayments'));
     }
 
 
@@ -40,7 +45,9 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($order['error'])->withInput();
         }
 
-        return redirect()->route('order.show', $order['orderId'])->with('success', 'Pesanan berhasil dibuat!');
+        return redirect($order['tripay_url']);
+
+        // return redirect()->route('order.show', $order['orderId'])->with('success', 'Pesanan berhasil dibuat!');
     }
 
 
