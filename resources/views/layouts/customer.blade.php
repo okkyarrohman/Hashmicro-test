@@ -29,6 +29,9 @@
                 <a class="navbar-brand" href="/customer/orders">
                    Order
                 </a>
+                <a class="navbar-brand" href="/customer/transaction">
+                   Transaction
+                </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

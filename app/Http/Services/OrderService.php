@@ -93,6 +93,7 @@ class OrderService
             $orderId = $this->orderRepository->storeGetId($storedOrder);
 
             $orderItems = [];
+            $totalAmount = 0;
             foreach ($products as $product) {
 
                 $storedDetail = [
@@ -110,15 +111,20 @@ class OrderService
                     'quantity'  => $quantity,
                 ];
 
+                $totalAmount += $product->price * $quantity;
+
                 $this->detailOrderRepository->store($storedDetail);
                 $this->productRepository->updateStock($product->id, $product->stock - $quantity);
             }
 
             $tripayService = new TripayService();
-            $tripayData = $tripayService->createTransaction($orderId, $paymentCode, $totalPrice, $customer, $orderItems);
+            $tripayData = $tripayService->createTransaction($orderId, $paymentCode, $totalAmount, $customer, $orderItems);
             if (!isset($tripayData['success']) || !$tripayData['success']) {
                 return ['error' => $tripayData['message'] ?? 'Gagal membuat transaksi di Tripay'];
             }
+
+            $this->orderRepository->updateTax($tripayData['data']['total_fee'], $orderId);
+            $this->orderRepository->updatedExpired($tripayData['data']['expired_time'], $orderId);
         } catch (\Exception $e) {
             return [
                 'error' => $e->getMessage(),

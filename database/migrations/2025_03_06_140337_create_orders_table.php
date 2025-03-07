@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('total_price');
             $table->enum('status', ['PAID', 'FAILED', 'EXPIRED', 'UNPAID']);
             $table->dateTime('paid_at')->nullable();
+            $table->bigInteger('expired_at')->nullable();
             $table->timestamps();
         });
     }

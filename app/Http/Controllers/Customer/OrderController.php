@@ -46,8 +46,6 @@ class OrderController extends Controller
         }
 
         return redirect($order['tripay_url']);
-
-        // return redirect()->route('order.show', $order['orderId'])->with('success', 'Pesanan berhasil dibuat!');
     }
 
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\TransactionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,6 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
     Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::post('/orders', [OrderController::class, 'store'])->name('order.store');
+
+    Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
 });

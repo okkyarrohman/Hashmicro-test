@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,7 @@ class TripayService
 
     public function createTransaction($orderId, $paymentCode, $totalPrice, $customer, $orderItems)
     {
-        $merchantRef = Str::random(6);
+        $expiredTime = Carbon::now()->addHour()->timestamp;
 
         $payload = [
             'method'         => $paymentCode, // Contoh: BCAVA, BRIVA, dll.
@@ -36,12 +37,11 @@ class TripayService
             'order_items'    => $orderItems,
             'callback_url'   => url('/api/tripay/callback'),
             'return_url'     => url("/customer/orders/$orderId"),
-            'expired_time'   => time() + (24 * 60 * 60), // 24 jam
+            'expired_time'   => $expiredTime,
             'signature'    => hash_hmac('sha256', $this->merchantCode . $orderId . $totalPrice, $this->privateKey)
         ];
 
-        // 🔹 Debug sebelum request (opsional)
-        // dd($data, $signature, $payload);
+
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->apiKey}"
