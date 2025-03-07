@@ -95,6 +95,22 @@
                 <i class="fab fa-linkedin fa-lg"></i> LinkedIn
             </a>
         </p>
+    <p class="mt-4">
+        Website ini dibuat menggunakan Laravel 12, dengan blade templating enggine untuk client side. databasenya menggunakan MySql
+        Untuk design architecture yang saya gunakan adalah berkonsep Repository Services pattern, jadi Query nya saya taruh di Repository Class
+        , dan Services untuk proses bisnis nya.
+        Tentunya sedikit kompleks fitur yang saya buat kali ini yang hanya saya kerjakan dengan deadline 1 hari. Tetapi dengan pattern ini saya tidak perlu menulis Query bekali bekali, tinggal dipanggil aja data yang ada dari class Services
+        Lebih Detail nya bisa di lihat di repository Github saya
+        <br>
+        <a href="https://github.com/okkyarrohman/Hashmicro-test" class="text-white me-3" target="_blank">
+            <i class="fab fa-github fa-lg"></i> Repo Project
+        </a> 
+
+        {{-- Website ini dibuat sebagai bagian dari technical test untuk HashMicro.
+        Menggunakan teknologi Laravel untuk backend serta Bootstrap untuk tampilan UI.
+        Beberapa fitur utama termasuk manajemen produk, pemesanan dengan integrasi payment gateway,
+        serta fitur ekspor laporan dalam format PDF. --}}
+    </p>
     </div>
 </header>
 
