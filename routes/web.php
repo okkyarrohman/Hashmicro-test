@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\CharacterController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\TransactionController as CustomerTransactionController;
@@ -16,6 +17,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/character', [CharacterController::class, 'index'])->name('character.index');
+Route::post('/character', [CharacterController::class, 'store'])->name('character.store');
 
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
