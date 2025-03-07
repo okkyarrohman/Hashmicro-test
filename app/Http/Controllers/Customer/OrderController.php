@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -51,7 +52,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-
+        $user = Auth::user();
 
         $order = $this->orderService->show($id);
 

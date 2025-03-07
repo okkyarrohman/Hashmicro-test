@@ -1,4 +1,10 @@
-@extends('layouts.customer')
+@php
+    $layout = Auth::user()->hasRole('admin') ? 'layouts.admin' : 'layouts.customer';
+@endphp
+@extends($layout)
+
+
+
 
 @section('content')
 
@@ -13,11 +19,11 @@
                     <div class="mb-3">
                         <strong>Status:</strong>
                         @php
-    $statusColor = [
-        'PENDING' => 'warning',
-        'PAID' => 'success',
-        'EXPIRED' => 'danger'
-    ];
+$statusColor = [
+    'PENDING' => 'warning',
+    'PAID' => 'success',
+    'EXPIRED' => 'danger'
+];
                         @endphp
                         <span class="badge bg-{{ $statusColor[$order->status] ?? 'secondary' }}">
                             {{ ucfirst($order->status) }}
