@@ -2,46 +2,70 @@
 
 @section('content')
 
+    <div class="container mt-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h2 class="text-center mb-4">📦 Order Details #{{ $order->id }}</h2>
 
-        <div class="container">
-            <h2>Detail Order #{{ $order->id }}</h2>
+                <div class="mb-3">
+                    <strong>Status:</strong>
+                    @php
+                        $statusColor = [
+                            'Pending' => 'warning',
+                            'Paid' => 'success',
+                            'Cancelled' => 'danger'
+                        ];
+                    @endphp
+                    <span class="badge bg-{{ $statusColor[$order->status] ?? 'secondary' }}">
+                        {{ ucfirst($order->status) }}
+                    </span>
+                </div>
 
-            <h3>Produk yang Dibeli:</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                    <th>Nama Produk</th>
-                        <th>Harga</th>
-                        <th>Jumlah</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($orderDetails as $detail)
+                <h3>🛍️ Produk yang Dibeli:</h3>
+                <table class="table table-hover">
+                    <thead class="table-dark">
                         <tr>
-                            <td>{{ $detail->product_name }}</td> {{-- Perbaikan: gunakan alias dari query --}}
-                            <td>Rp.{{ number_format($detail->price) }}</td>
-                            <td>{{ $detail->quantity }}</td>
-                            <td>Rp. {{ number_format($detail->price * $detail->quantity) }}</td>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <p><strong>Status:</strong> {{ $order->status }}</p>
-            <p><strong>Price:</strong>Rp. {{ number_format($order->total_price) }}</p>
-            <p><strong>Tax:</strong> Rp. {{ number_format($order->tax) }}</p>
-            <p><strong>Total Price:</strong> Rp{{ number_format($order->total_price + $order->tax)}}</p>
+                    </thead>
+                    <tbody>
+                        @foreach($orderDetails as $detail)
+                            <tr>
+                                <td>{{ $detail->product_name }}</td>
+                                <td>Rp.{{ number_format($detail->price) }}</td>
+                                <td>{{ $detail->quantity }}</td>
+                                <td><strong>Rp. {{ number_format($detail->price * $detail->quantity) }}</strong></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
+                <div class="mt-3">
+                    <p><strong>💰 Price:</strong> Rp. {{ number_format($order->total_price) }}</p>
+                    <p><strong>🧾 Tax:</strong> Rp. {{ number_format($order->tax) }}</p>
+                    <p class="fs-4"><strong>💳 Total Price:</strong> Rp.
+                        {{ number_format($order->total_price + $order->tax) }}</p>
+                </div>
+
+                <a href="{{ url('/customer/orders') }}" class="btn btn-outline-secondary mt-3">
+                    ⬅️ Kembali ke Daftar Transaksi
+                </a>
+            </div>
         </div>
+    </div>
 
-         @if(session('success'))
+    @if(session('success'))
         <script>
             Swal.fire({
-                title: "Berhasil!",
+                title: "✅ Berhasil!",
                 text: "{{ session('success') }}",
                 icon: "success",
                 confirmButtonText: "OK"
             });
         </script>
     @endif
+
 @endsection
